@@ -1,0 +1,15 @@
+fastapi
+uvicorn[standard]
+sqlalchemy
+pydantic[email]
+pydantic-settings
+python-jose[cryptography]
+passlib[bcrypt]
+python-multipart
+openai
+langchain
+langchain-community
+requests
+pypdf
+python-docx
+bcrypt

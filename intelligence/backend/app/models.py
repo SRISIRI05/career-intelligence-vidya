@@ -1,13 +1,20 @@
 import uuid
 from sqlalchemy import Column, String, Integer, Float, Text, ForeignKey, DateTime, JSON
+from sqlalchemy.dialects.postgresql import UUID
 from sqlalchemy.orm import relationship
 from sqlalchemy.sql import func
-from .database import Base
+from .database import Base, DATABASE_URL
+
+# Use UUID type for PostgreSQL, String for SQLite
+def pk_type():
+    if DATABASE_URL and DATABASE_URL.startswith("postgresql"):
+        return UUID(as_uuid=False)
+    return String(36)
 
 class User(Base):
     __tablename__ = "users"
     
-    id = Column(String(36), primary_key=True, default=lambda: str(uuid.uuid4()))
+    id = Column(pk_type(), primary_key=True, default=lambda: str(uuid.uuid4()))
     name = Column(String(255), nullable=False)
     email = Column(String(255), unique=True, nullable=False, index=True)
     hashed_password = Column(String(255), nullable=False)
@@ -26,8 +33,8 @@ class User(Base):
 class Resume(Base):
     __tablename__ = "resumes"
     
-    id = Column(String(36), primary_key=True, default=lambda: str(uuid.uuid4()))
-    user_id = Column(String(36), ForeignKey("users.id", ondelete="CASCADE"), nullable=False)
+    id = Column(pk_type(), primary_key=True, default=lambda: str(uuid.uuid4()))
+    user_id = Column(pk_type(), ForeignKey("users.id", ondelete="CASCADE"), nullable=False)
     filename = Column(String(255))
     file_content_text = Column(Text)
     file_url = Column(String(512), nullable=True)
@@ -50,9 +57,9 @@ class Resume(Base):
 class ResumeScore(Base):
     __tablename__ = "resume_scores"
     
-    id = Column(String(36), primary_key=True, default=lambda: str(uuid.uuid4()))
-    resume_id = Column(String(36), ForeignKey("resumes.id", ondelete="CASCADE"), nullable=False)
-    user_id = Column(String(36), ForeignKey("users.id", ondelete="CASCADE"), nullable=False)
+    id = Column(pk_type(), primary_key=True, default=lambda: str(uuid.uuid4()))
+    resume_id = Column(pk_type(), ForeignKey("resumes.id", ondelete="CASCADE"), nullable=False)
+    user_id = Column(pk_type(), ForeignKey("users.id", ondelete="CASCADE"), nullable=False)
     
     ats_score = Column(Integer, default=0)
     technical_score = Column(Integer, default=0)
@@ -72,9 +79,9 @@ class ResumeScore(Base):
 class SkillAnalysis(Base):
     __tablename__ = "skill_analysis"
     
-    id = Column(String(36), primary_key=True, default=lambda: str(uuid.uuid4()))
-    resume_id = Column(String(36), ForeignKey("resumes.id", ondelete="CASCADE"), nullable=False)
-    user_id = Column(String(36), ForeignKey("users.id", ondelete="CASCADE"), nullable=False)
+    id = Column(pk_type(), primary_key=True, default=lambda: str(uuid.uuid4()))
+    resume_id = Column(pk_type(), ForeignKey("resumes.id", ondelete="CASCADE"), nullable=False)
+    user_id = Column(pk_type(), ForeignKey("users.id", ondelete="CASCADE"), nullable=False)
     
     missing_skills = Column(JSON, default=list)
     weak_skills = Column(JSON, default=list)
@@ -90,8 +97,8 @@ class SkillAnalysis(Base):
 class LearningPlan(Base):
     __tablename__ = "learning_plans"
     
-    id = Column(String(36), primary_key=True, default=lambda: str(uuid.uuid4()))
-    user_id = Column(String(36), ForeignKey("users.id", ondelete="CASCADE"), nullable=False)
+    id = Column(pk_type(), primary_key=True, default=lambda: str(uuid.uuid4()))
+    user_id = Column(pk_type(), ForeignKey("users.id", ondelete="CASCADE"), nullable=False)
     domain = Column(String(255), nullable=False)
     role = Column(String(255), nullable=False)
     roadmap = Column(JSON, nullable=False, default=dict)
@@ -104,8 +111,8 @@ class LearningPlan(Base):
 class QuizResult(Base):
     __tablename__ = "quiz_results"
     
-    id = Column(String(36), primary_key=True, default=lambda: str(uuid.uuid4()))
-    user_id = Column(String(36), ForeignKey("users.id", ondelete="CASCADE"), nullable=False)
+    id = Column(pk_type(), primary_key=True, default=lambda: str(uuid.uuid4()))
+    user_id = Column(pk_type(), ForeignKey("users.id", ondelete="CASCADE"), nullable=False)
     domain = Column(String(255), nullable=False)
     difficulty = Column(String(50), nullable=False)
     
@@ -123,8 +130,8 @@ class QuizResult(Base):
 class InterviewResult(Base):
     __tablename__ = "interview_results"
     
-    id = Column(String(36), primary_key=True, default=lambda: str(uuid.uuid4()))
-    user_id = Column(String(36), ForeignKey("users.id", ondelete="CASCADE"), nullable=False)
+    id = Column(pk_type(), primary_key=True, default=lambda: str(uuid.uuid4()))
+    user_id = Column(pk_type(), ForeignKey("users.id", ondelete="CASCADE"), nullable=False)
     role = Column(String(255), nullable=False)
     type = Column(String(100), nullable=False)  # Technical, HR, Behavioral
     
@@ -142,8 +149,8 @@ class InterviewResult(Base):
 class Progress(Base):
     __tablename__ = "progress"
     
-    id = Column(String(36), primary_key=True, default=lambda: str(uuid.uuid4()))
-    user_id = Column(String(36), ForeignKey("users.id", ondelete="CASCADE"), nullable=False)
+    id = Column(pk_type(), primary_key=True, default=lambda: str(uuid.uuid4()))
+    user_id = Column(pk_type(), ForeignKey("users.id", ondelete="CASCADE"), nullable=False)
     
     resume_score = Column(Integer, default=0)
     skill_match_score = Column(Integer, default=0)
@@ -160,8 +167,8 @@ class Progress(Base):
 class JobRecommendation(Base):
     __tablename__ = "job_recommendations"
     
-    id = Column(String(36), primary_key=True, default=lambda: str(uuid.uuid4()))
-    user_id = Column(String(36), ForeignKey("users.id", ondelete="CASCADE"), nullable=False)
+    id = Column(pk_type(), primary_key=True, default=lambda: str(uuid.uuid4()))
+    user_id = Column(pk_type(), ForeignKey("users.id", ondelete="CASCADE"), nullable=False)
     recommendations = Column(JSON, default=list)
     
     created_at = Column(DateTime(timezone=True), server_default=func.now())
@@ -172,7 +179,7 @@ class JobRecommendation(Base):
 class Resource(Base):
     __tablename__ = "resources"
     
-    id = Column(String(36), primary_key=True, default=lambda: str(uuid.uuid4()))
+    id = Column(pk_type(), primary_key=True, default=lambda: str(uuid.uuid4()))
     role = Column(String(255), unique=True, nullable=False)
     resources = Column(JSON, default=dict)
     
@@ -182,7 +189,7 @@ class Resource(Base):
 class News(Base):
     __tablename__ = "news"
     
-    id = Column(String(36), primary_key=True, default=lambda: str(uuid.uuid4()))
+    id = Column(pk_type(), primary_key=True, default=lambda: str(uuid.uuid4()))
     domain = Column(String(255), unique=True, nullable=False)
     news_items = Column(JSON, default=list)
     

@@ -18,6 +18,9 @@ engine = create_engine(DATABASE_URL, connect_args=connect_args)
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 Base = declarative_base()
 
+# Export DATABASE_URL for use in models.py
+__all__ = ["engine", "SessionLocal", "Base", "DATABASE_URL"]
+
 def get_db():
     db = SessionLocal()
     try:

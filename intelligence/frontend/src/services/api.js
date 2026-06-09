@@ -2,7 +2,7 @@ import axios from 'axios';
 
 // Create Axios Instance
 const api = axios.create({
-  baseURL: '/api', // Proxied by Vite to port 8000 in dev
+  baseURL: import.meta.env.VITE_API_URL ? `${import.meta.env.VITE_API_URL}/api` : '/api',
   headers: {
     'Content-Type': 'application/json',
   },

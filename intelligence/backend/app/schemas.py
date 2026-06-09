@@ -179,14 +179,22 @@ class InterviewEvaluationResponse(BaseModel):
 
 
 # ================= DASHBOARD & PROGRESS SCHEMAS =================
+class ActivityItem(BaseModel):
+    date: str
+    role: str
+    type: str
+    score: str
+
 class ProgressResponse(BaseModel):
     resume_score: int
     skill_match_score: int
     avg_quiz_score: int
     avg_interview_score: int
     learning_completion_rate: int
-    timeline: List[Dict[str, Any]] # timeline data for chart
+    timeline: List[Dict[str, Any]]
     next_actions: List[str]
+    quiz_history: List[ActivityItem]
+    interview_history: List[ActivityItem]
 
     class Config:
         from_attributes = True

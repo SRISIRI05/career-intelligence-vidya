@@ -83,7 +83,28 @@ def get_user_progress(
     # Ensure timeline is sorted chronologically
     timeline = sorted(timeline, key=lambda x: x["date"])
     
-    # 6. Generate next actions via ProgressAgent
+    # 6. Build quiz and interview history lists
+    quiz_history = [
+        {
+            "date": q.created_at.strftime("%m/%d/%Y"),
+            "role": q.domain,
+            "type": q.difficulty,
+            "score": f"{int(q.accuracy)}/100"
+        }
+        for q in quizzes
+    ]
+
+    interview_history = [
+        {
+            "date": i.created_at.strftime("%m/%d/%Y"),
+            "role": i.role,
+            "type": i.type,
+            "score": f"{i.scores.get('overall', 0)}/100"
+        }
+        for i in interviews
+    ]
+
+    # 7. Generate next actions via ProgressAgent
     next_actions = progress_agent.generate_next_actions(
         resume_score=resume_score,
         avg_quiz_score=avg_quiz,
@@ -98,5 +119,7 @@ def get_user_progress(
         "avg_interview_score": avg_interview,
         "learning_completion_rate": learning_comp,
         "timeline": timeline,
-        "next_actions": next_actions
+        "next_actions": next_actions,
+        "quiz_history": quiz_history,
+        "interview_history": interview_history
     }

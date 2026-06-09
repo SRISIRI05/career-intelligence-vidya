@@ -12,6 +12,66 @@ import {
 import api from '../services/api';
 import GlassCard from '../components/GlassCard';
 
+const ActivityHistory = ({ quizHistory, interviewHistory }) => {
+  const [activeTab, setActiveTab] = useState('quizzes');
+  const items = activeTab === 'quizzes' ? quizHistory : interviewHistory;
+
+  return (
+    <GlassCard hoverEffect={false} className="p-6 space-y-4">
+      <div className="flex items-center justify-between flex-wrap gap-3">
+        <h3 className="font-bold text-lg text-white">Activity Practice History</h3>
+        <div className="flex gap-2">
+          <button
+            onClick={() => setActiveTab('quizzes')}
+            className={`px-4 py-1.5 rounded-full text-sm font-semibold transition-colors ${
+              activeTab === 'quizzes' ? 'bg-white/10 text-white' : 'text-slate-400 hover:text-white'
+            }`}
+          >
+            Quizzes ({quizHistory.length})
+          </button>
+          <button
+            onClick={() => setActiveTab('interviews')}
+            className={`px-4 py-1.5 rounded-full text-sm font-semibold transition-colors ${
+              activeTab === 'interviews' ? 'bg-primary-600 text-white' : 'text-slate-400 hover:text-white'
+            }`}
+          >
+            Interviews ({interviewHistory.length})
+          </button>
+        </div>
+      </div>
+
+      {items.length === 0 ? (
+        <p className="text-slate-400 text-sm py-4">
+          No {activeTab} recorded yet.
+        </p>
+      ) : (
+        <table className="w-full text-sm">
+          <thead>
+            <tr className="text-slate-400 text-xs uppercase tracking-wider border-b border-white/10">
+              <th className="text-left py-2 pr-4">Date</th>
+              <th className="text-left py-2 pr-4">Role</th>
+              <th className="text-left py-2 pr-4">Type</th>
+              <th className="text-left py-2">Fluency Score</th>
+            </tr>
+          </thead>
+          <tbody>
+            {items.map((item, idx) => (
+              <tr key={idx} className="border-b border-white/5 text-slate-300">
+                <td className="py-3 pr-4">{item.date}</td>
+                <td className="py-3 pr-4 font-medium text-white">{item.role}</td>
+                <td className="py-3 pr-4">
+                  <span className="px-2 py-0.5 rounded border border-white/20 text-xs">{item.type}</span>
+                </td>
+                <td className="py-3 font-semibold text-white">{item.score}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      )}
+    </GlassCard>
+  );
+};
+
 const Dashboard = () => {
   const navigate = useNavigate();
   const [data, setData] = useState(null);
@@ -59,7 +119,7 @@ const Dashboard = () => {
     );
   }
 
-  const { resume_score, skill_match_score, avg_quiz_score, avg_interview_score, learning_completion_rate, timeline, next_actions } = data;
+  const { resume_score, skill_match_score, avg_quiz_score, avg_interview_score, learning_completion_rate, timeline, next_actions, quiz_history, interview_history } = data;
 
   const cards = [
     { name: "Resume Score", value: resume_score || "--", max: "/100", link: "/resume-upload", desc: "ATS, formatting and skills scanner", icon: FileText, color: "text-blue-400 bg-blue-500/10 border-blue-500/20" },
@@ -155,6 +215,9 @@ const Dashboard = () => {
           </div>
         </GlassCard>
       </div>
+
+      {/* Activity Practice History */}
+      <ActivityHistory quizHistory={quiz_history || []} interviewHistory={interview_history || []} />
 
       {/* AI Next Actions Suggestions */}
       <GlassCard hoverEffect={false} className="p-6">

@@ -5,58 +5,76 @@ from .base_agent import BaseAgent
 
 MOCK_JOBS = [
     {
-        "company": "Google LLC",
+        "company": "Tata Consultancy Services (TCS)",
         "role": "Machine Learning Engineer",
-        "salary_range": "$140,000 - $190,000",
-        "location": "Mountain View, CA (Hybrid)",
+        "salary_range": "₹12,00,000 - ₹20,00,000 per annum",
+        "location": "Bengaluru, Karnataka (Hybrid)",
         "skills_required": ["Python", "PyTorch", "TensorFlow", "Docker", "Machine Learning", "System Design"],
         "match_score": 92,
-        "apply_url": "https://careers.google.com"
+        "apply_url": "https://www.tcs.com/careers"
     },
     {
-        "company": "Stripe",
-        "role": "Full Stack Engineer",
-        "salary_range": "$130,000 - $175,000",
-        "location": "San Francisco, CA (Remote)",
-        "skills_required": ["React.js", "Ruby on Rails", "JavaScript", "SQL", "Git", "System Design"],
+        "company": "Infosys",
+        "role": "Full Stack Developer",
+        "salary_range": "₹10,00,000 - ₹18,00,000 per annum",
+        "location": "Hyderabad, Telangana (Hybrid)",
+        "skills_required": ["React.js", "Node.js", "JavaScript", "SQL", "Git", "System Design"],
         "match_score": 88,
-        "apply_url": "https://stripe.com/jobs"
+        "apply_url": "https://www.infosys.com/careers"
     },
     {
-        "company": "Amazon Web Services (AWS)",
-        "role": "Cloud Infrastructure Architect",
-        "salary_range": "$150,000 - $200,000",
-        "location": "Seattle, WA (Hybrid)",
+        "company": "Wipro Technologies",
+        "role": "Cloud Infrastructure Engineer",
+        "salary_range": "₹14,00,000 - ₹22,00,000 per annum",
+        "location": "Pune, Maharashtra (Hybrid)",
         "skills_required": ["AWS", "Terraform", "Kubernetes", "Linux", "Bash", "Networking"],
         "match_score": 90,
-        "apply_url": "https://amazon.jobs"
+        "apply_url": "https://careers.wipro.com"
     },
     {
-        "company": "CrowdStrike",
+        "company": "HCL Technologies",
         "role": "DevOps Engineer",
-        "salary_range": "$125,000 - $160,000",
-        "location": "Austin, TX (Remote)",
+        "salary_range": "₹10,00,000 - ₹16,00,000 per annum",
+        "location": "Chennai, Tamil Nadu (Remote)",
         "skills_required": ["Docker", "Kubernetes", "CI/CD", "Terraform", "Linux", "Python", "AWS"],
         "match_score": 85,
-        "apply_url": "https://crowdstrike.com/careers"
+        "apply_url": "https://www.hcltech.com/careers"
     },
     {
-        "company": "Meta Platforms",
-        "role": "Software Engineer (Product)",
-        "salary_range": "$145,000 - $195,000",
-        "location": "Menlo Park, CA (Hybrid)",
-        "skills_required": ["React.js", "JavaScript", "HTML5", "CSS3", "Git", "Tailwind CSS"],
+        "company": "Flipkart",
+        "role": "Software Development Engineer",
+        "salary_range": "₹18,00,000 - ₹30,00,000 per annum",
+        "location": "Bengaluru, Karnataka (Hybrid)",
+        "skills_required": ["React.js", "JavaScript", "Java", "Spring Boot", "Git", "Microservices"],
         "match_score": 89,
-        "apply_url": "https://meta.com/careers"
+        "apply_url": "https://www.flipkartcareers.com"
     },
     {
-        "company": "Microsoft Corporation",
+        "company": "Zoho Corporation",
         "role": "Data Scientist",
-        "salary_range": "$135,000 - $180,000",
-        "location": "Redmond, WA (Hybrid)",
+        "salary_range": "₹12,00,000 - ₹20,00,000 per annum",
+        "location": "Chennai, Tamil Nadu (On-site)",
         "skills_required": ["Python", "SQL", "Machine Learning", "Pandas", "NumPy", "Scikit-Learn", "Statistics"],
         "match_score": 91,
-        "apply_url": "https://careers.microsoft.com"
+        "apply_url": "https://careers.zohocorp.com"
+    },
+    {
+        "company": "Swiggy",
+        "role": "Backend Engineer",
+        "salary_range": "₹16,00,000 - ₹26,00,000 per annum",
+        "location": "Bengaluru, Karnataka (Hybrid)",
+        "skills_required": ["Python", "Go", "Microservices", "Kafka", "Redis", "SQL", "Docker"],
+        "match_score": 87,
+        "apply_url": "https://bytes.swiggy.com/careers"
+    },
+    {
+        "company": "Razorpay",
+        "role": "Frontend Engineer",
+        "salary_range": "₹15,00,000 - ₹25,00,000 per annum",
+        "location": "Bengaluru, Karnataka (Hybrid)",
+        "skills_required": ["React.js", "JavaScript", "TypeScript", "CSS3", "HTML5", "Git"],
+        "match_score": 86,
+        "apply_url": "https://razorpay.com/jobs"
     }
 ]
 
@@ -66,8 +84,12 @@ class JobAgent(BaseAgent):
         Recommends job openings matching the user's skillset and desired domain.
         """
         system_instruction = (
-            "You are an expert Job Matcher. Recommend 4-5 job postings matching the candidate's domain "
-            "and technical skills. Return a JSON array of objects, each object containing: "
+            "You are an expert Job Matcher for the Indian job market. Recommend 4-5 job postings from Indian companies "
+            "matching the candidate's domain and technical skills. Use Indian companies like TCS, Infosys, Wipro, HCL, "
+            "Flipkart, Swiggy, Zomato, Razorpay, Zoho, PhonePe, CRED, Paytm, Ola, Meesho, etc. "
+            "Salary ranges must be in Indian Rupees (₹ per annum). Locations must be Indian cities like "
+            "Bengaluru, Hyderabad, Pune, Chennai, Mumbai, Delhi, Noida, Gurgaon. "
+            "Return a JSON array of objects, each object containing: "
             "'company' (string), 'role' (string), 'salary_range' (string), 'location' (string), "
             "'skills_required' (array of strings), 'match_score' (integer 0-100), and 'apply_url' (string). "
             "Output ONLY valid raw JSON."

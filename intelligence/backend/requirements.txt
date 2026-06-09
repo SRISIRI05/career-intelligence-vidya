@@ -9,7 +9,9 @@ python-multipart
 openai
 langchain
 langchain-community
+langchain-openai
 requests
 pypdf
 python-docx
 bcrypt
+psycopg2-binary

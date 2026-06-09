@@ -22,17 +22,17 @@ app.add_middleware(
 )
 
 # Include API module routing
-app.include_router(auth.router)
-app.include_router(resume.router)
-app.include_router(evaluate.router)
-app.include_router(skills.router)
-app.include_router(plan.router)
-app.include_router(quiz.router)
-app.include_router(interview.router)
-app.include_router(jobs.router)
-app.include_router(progress.router)
-app.include_router(news.router)
-app.include_router(resources.router)
+app.include_router(auth.router, prefix="/api")
+app.include_router(resume.router, prefix="/api")
+app.include_router(evaluate.router, prefix="/api")
+app.include_router(skills.router, prefix="/api")
+app.include_router(plan.router, prefix="/api")
+app.include_router(quiz.router, prefix="/api")
+app.include_router(interview.router, prefix="/api")
+app.include_router(jobs.router, prefix="/api")
+app.include_router(progress.router, prefix="/api")
+app.include_router(news.router, prefix="/api")
+app.include_router(resources.router, prefix="/api")
 
 @app.get("/")
 def read_root():
